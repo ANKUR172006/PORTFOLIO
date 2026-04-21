@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Scroll Demo</title>
+    <style>
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;700;900&display=swap");
+
+@keyframes bend-it-like-beckham {
+  from {
+    corner-shape: superellipse(-6);
+  }
+
+  to {
+    corner-shape: superellipse(6);
+  }
+}
+
+@keyframes headline-float {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes section-fade-up {
+  from {
+    opacity: 0.18;
+    transform: translateY(56px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(72px) scale(0.92) rotate(-4deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes blob-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(2rem, -2rem, 0) scale(1.08);
+  }
+}
+
+@keyframes shimmer-line {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(220%);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Figtree", sans-serif;
+  background:
+    radial-gradient(circle at top, #d43b77 0%, transparent 28%),
+    linear-gradient(180deg, #c3316c 0%, #9d1d4f 100%);
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+  scroll-snap-type: y proximity;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -1rem;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  background: white;
+  border-bottom-left-radius: 100%;
+  animation: bend-it-like-beckham linear both;
+  animation-timeline: scroll();
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 20%),
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12), transparent 24%);
+  opacity: 0.55;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 15;
+  width: 100%;
+  height: 0.35rem;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #fff, #ffd2e6 40%, #ffffff);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.45);
+  transform-origin: left center;
+}
+
+* {
+  box-sizing: border-box;
+  text-box: cap alphabetic;
+}
+
+.no-filter {
+  isolation: isolate;
+}
+
+section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  animation: section-fade-up linear both;
+  animation-timeline: view();
+  animation-range: entry 15% cover 45%;
+}
+
+section:nth-child(odd) {
+  min-height: 100vh;
+}
+
+section:nth-child(even) {
+  padding: 10vw 0;
+  border-block: 0.0625rem solid #00000030;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(10px);
+  opacity: 0.42;
+  pointer-events: none;
+  animation: blob-drift 8s ease-in-out infinite;
+}
+
+.orb--one {
+  top: 12%;
+  left: 10%;
+  width: 10rem;
+  height: 10rem;
+  background: radial-gradient(circle, rgba(255, 213, 230, 0.75), transparent 65%);
+}
+
+.orb--two {
+  right: 12%;
+  bottom: 14%;
+  width: 13rem;
+  height: 13rem;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.38), transparent 62%);
+  animation-delay: -2.8s;
+}
+
+.center {
+  width: min(1120px, calc(100% - 3rem));
+  color: white;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(3.6rem, 9vw, 6.8rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: clamp(2.5rem, 6vw, 4.2rem);
+  font-weight: 900;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.title-line {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.04em;
+}
+
+.title-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.7em) scale(0.86) rotate(4deg);
+  animation: headline-float 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--char-index, 0) * 35ms);
+}
+
+#cards {
+  display: flex;
+  gap: 2.25rem;
+  margin-top: 3.375rem;
+  perspective: 1200px;
+}
+
+#cards article {
+  --rx: 0deg;
+  --ry: 0deg;
+  --tx: 0px;
+  --ty: 0px;
+  color: black;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 2.25rem;
+  display: grid;
+  gap: 1.5rem;
+  border-radius: 5rem;
+  corner-shape: squircle;
+  box-shadow: 0 30px 70px rgba(67, 7, 33, 0.24);
+  transform-origin: center bottom;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    filter 0.35s ease,
+    background 0.35s ease;
+  animation: card-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 10% cover 38%;
+  position: relative;
+  overflow: hidden;
+  transform:
+    translate3d(var(--tx), var(--ty), 0)
+    rotateX(var(--rx))
+    rotateY(var(--ry));
+}
+
+#cards article::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.88) 50%, transparent 80%);
+  transform: translateX(-140%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#cards article:nth-child(2) {
+  animation-range: entry 18% cover 46%;
+}
+
+#cards article:nth-child(3) {
+  animation-range: entry 26% cover 54%;
+}
+
+#cards article:hover {
+  transform:
+    translate3d(var(--tx), calc(var(--ty) - 14px), 0)
+    rotateX(calc(var(--rx) + 6deg))
+    rotateY(calc(var(--ry) - 6deg));
+  box-shadow: 0 40px 90px rgba(67, 7, 33, 0.3);
+  filter: brightness(1.02);
+  background: rgba(255, 255, 255, 1);
+}
+
+#cards article:hover::before {
+  opacity: 0.65;
+  animation: shimmer-line 0.9s ease;
+}
+
+#cards h3 {
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  font-weight: 900;
+}
+
+#cards p {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+button {
+  color: white;
+  background: #b7245c;
+  border: none;
+  height: 3rem;
+  width: fit-content;
+  padding: 0 1.5rem;
+  font: 700 1rem "Figtree", sans-serif;
+  border-radius: 5rem;
+  corner-shape: squircle;
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: 0 12px 30px rgba(183, 36, 92, 0.26);
+}
+
+button:hover {
+  cursor: pointer;
+  filter: brightness(110%);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(183, 36, 92, 0.34);
+}
+
+.hero-subline,
+.fin-note,
+.cards-intro {
+  margin-top: 1rem;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 700;
+  opacity: 0.84;
+}
+
+@media (max-width: 900px) {
+  #cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #cards article {
+    width: min(100%, 34rem);
+    border-radius: 3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::before,
+  section,
+  .title-char,
+  #cards article,
+  .orb {
+    animation: none !important;
+  }
+
+  #cards article,
+  button {
+    transition: none;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="progress-bar" aria-hidden="true">
+  <div class="progress-bar__fill" id="progressFill"></div>
+</div>
+
+<section>
+  <span class="orb orb--one" aria-hidden="true"></span>
+  <span class="orb orb--two" aria-hidden="true"></span>
+  <div class="center">
+    <h1 data-split="chars">HEY BIG SCROLLER</h1>
+    <p class="hero-subline">Smooth scroll, animated reveals, and a bend effect that reacts to page movement.</p>
+  </div>
+</section>
+
+<section>
+  <span class="orb orb--one" aria-hidden="true"></span>
+  <span class="orb orb--two" aria-hidden="true"></span>
+  <div class="center">
+    <h2 data-split="chars">ANIMATE A DIV FOR ME</h2>
+    <p class="cards-intro">Cards now reveal on scroll, lift on hover, shimmer on focus, and respond to your pointer with a soft 3D tilt.</p>
+    <div id="cards" class="no-filter">
+      <article>
+        <h3>Card 1</h3>
+        <p>Description ipsum</p>
+        <button>Button</button>
+      </article>
+      <article>
+        <h3>Card 2</h3>
+        <p>Description ipsum</p>
+        <button>Button</button>
+      </article>
+      <article>
+        <h3>Card 3</h3>
+        <p>Description ipsum</p>
+        <button>Button</button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="orb orb--one" aria-hidden="true"></span>
+  <span class="orb orb--two" aria-hidden="true"></span>
+  <div class="center">
+    <h2 data-split="chars"><i>Fin.</i></h2>
+    <p class="fin-note">The scroll now feels softer, more cinematic, and more alive.</p>
+  </div>
+</section>
+
+<script>
+  const progressFill = document.getElementById("progressFill");
+  const updateProgress = () => {
+    const scrollTop = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = maxScroll > 0 ? scrollTop / maxScroll : 0;
+    progressFill.style.width = `${ratio * 100}%`;
+  };
+
+  document.querySelectorAll("[data-split='chars']").forEach((node) => {
+    const text = node.textContent;
+    const chars = [...text];
+    node.textContent = "";
+    const line = document.createElement("span");
+    line.className = "title-line";
+    chars.forEach((char, index) => {
+      const span = document.createElement("span");
+      span.className = "title-char";
+      span.style.setProperty("--char-index", index);
+      span.textContent = char === " " ? "\u00A0" : char;
+      line.appendChild(span);
+    });
+    node.appendChild(line);
+  });
+
+  document.querySelectorAll("#cards article").forEach((card) => {
+    card.addEventListener("mousemove", (event) => {
+      const rect = card.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width;
+      const py = (event.clientY - rect.top) / rect.height;
+      const rotateY = (px - 0.5) * 14;
+      const rotateX = (0.5 - py) * 14;
+      const moveX = (px - 0.5) * 12;
+      const moveY = (py - 0.5) * 12;
+      card.style.setProperty("--rx", `${rotateX}deg`);
+      card.style.setProperty("--ry", `${rotateY}deg`);
+      card.style.setProperty("--tx", `${moveX}px`);
+      card.style.setProperty("--ty", `${moveY}px`);
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.setProperty("--rx", "0deg");
+      card.style.setProperty("--ry", "0deg");
+      card.style.setProperty("--tx", "0px");
+      card.style.setProperty("--ty", "0px");
+    });
+  });
+
+  updateProgress();
+  window.addEventListener("scroll", updateProgress, { passive: true });
+</script>
+</body>
+</html>

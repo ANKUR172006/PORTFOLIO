@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CF Lorebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg:     #050505;
+    --bg2:    #0d0d0d;
+    --bg3:    #111;
+    --green:  #00ff9d;
+    --cyan:   #00d4ff;
+    --border: rgba(0,255,157,0.12);
+    --text:   #d0d0d0;
+    --dim:    #888;
+    --sc:     #00ff9d;
+}
+
+body {
+    background: var(--bg);
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+}
+body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+    pointer-events: none; z-index: 9999;
+}
+  
+  
+  .entry-sub-name.group-rangers        { color: #00ff9d; text-shadow: 0 0 8px rgba(0,255,157,0.5); }
+.entry-sub-name.group-legacy         { color: #00d4ff; text-shadow: 0 0 8px rgba(0,212,255,0.5); }
+.entry-sub-name.group-villains       { color: #cc0000; text-shadow: 0 0 8px rgba(204,0,0,0.5); }
+.entry-sub-name.group-corrupted      { color: #7700ff; text-shadow: 0 0 8px rgba(119,0,255,0.5); }
+.entry-sub-name.group-extraterrestrial { color: #99dd44; text-shadow: 0 0 8px rgba(153,221,68,0.5); }
+.entry-sub-name.group-civilians      { color: #0066ff; text-shadow: 0 0 8px rgba(0,102,255,0.5); }
+.entry-sub-name.group-ancient        { color: #ff3366; text-shadow: 0 0 8px rgba(255,51,102,0.5); }
+.entry-sub-name.group-command        { color: #ff9f00; text-shadow: 0 0 8px rgba(255,159,0,0.5); }
+.entry-sub-name.group-military       { color: #bb9944; text-shadow: 0 0 8px rgba(187,153,68,0.5); }
+.entry-sub-name.group-enhanced       { color: #ff6600; text-shadow: 0 0 8px rgba(255,102,0,0.5); }
+.entry-sub-name.group-returned       { color: #cc00ff; text-shadow: 0 0 8px rgba(204,0,255,0.5); }
+.entry-sub-name.group-synthetic      { color: #eeff00; text-shadow: 0 0 8px rgba(238,255,0,0.5); }
+.entry-sub-name.group-government     { color: #8899aa; text-shadow: 0 0 8px rgba(136,153,170,0.5); }
+
+.lore-wrapper {
+    width: 990px;
+    margin: 0 auto;
+    padding: 30px 0 60px;
+}
+
+/* ── PAGE HEADER ── */
+.lore-page-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+.lore-page-header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0;
+    width: 220px; height: 1px;
+    background: linear-gradient(90deg, var(--green), transparent);
+    box-shadow: 0 0 10px rgba(0,255,157,0.4);
+}
+.lore-logo-icon {
+    width: 42px; height: 42px;
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(0,255,157,0.4);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 15px rgba(0,255,157,0.2), inset 0 0 15px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+}
+.lore-logo-symbol {
+    font-size: 22px; color: var(--green);
+    text-shadow: 0 0 12px rgba(0,255,157,0.9), 0 0 30px rgba(0,255,157,0.4);
+    line-height: 1;
+}
+.lore-page-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 4px;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(255,255,255,0.15);
+}
+.lore-page-subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px; color: var(--dim);
+    letter-spacing: 2px; text-transform: uppercase; margin-top: 3px;
+}
+
+/* ══════════════════════════
+   INDEX CARD GRID
+══════════════════════════ */
+.index-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px; letter-spacing: 3px;
+    color: rgba(0,255,157,0.3); text-transform: uppercase;
+    margin-bottom: 14px;
+}
+.index-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.group-card {
+    position: relative; height: 220px;
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden; cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: border-color 0.3s, transform 0.3s;
+}
+.group-card:hover {
+    border-color: var(--green);
+    transform: translateY(-3px);
+}
+.group-card-img { position: absolute; inset: 0; }
+.group-card-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0.2; filter: saturate(0.2) brightness(0.7);
+    transition: opacity 0.4s, filter 0.4s;
+}
+.group-card:hover .group-card-img img { opacity: 0.35; filter: saturate(0.4) brightness(0.8); }
+.group-card-wash {
+    position: absolute; inset: 0;
+    background: var(--green); opacity: 0;
+    mix-blend-mode: overlay; transition: opacity 0.4s;
+}
+.group-card:hover .group-card-wash { opacity: 0.15; }
+.group-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.5) 50%, rgba(5,5,5,0.1) 100%);
+}
+.group-card-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--green); box-shadow: 0 0 12px var(--green);
+    opacity: 0.6; transition: opacity 0.3s;
+}
+.group-card:hover .group-card-bar { opacity: 1; }
+.group-card-grid {
+    position: absolute; inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(255,255,255,0.012) 20px, rgba(255,255,255,0.012) 21px),
+        repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(255,255,255,0.012) 20px, rgba(255,255,255,0.012) 21px);
+    pointer-events: none;
+}
+.group-card-content {
+    position: absolute; inset: 0; padding: 16px 18px;
+    display: flex; flex-direction: column; justify-content: flex-end; z-index: 2;
+}
+.group-card-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--green); opacity: 0.7; margin-bottom: 5px; transition: opacity 0.3s;
+}
+.group-card:hover .group-card-eyebrow { opacity: 1; }
+.group-card-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: #fff; line-height: 1.1;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.8); margin-bottom: 8px;
+}
+.group-card-meta { display: flex; align-items: center; justify-content: space-between; }
+.group-card-count { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+.group-card-enter {
+    font-family: 'Share Tech Mono', monospace; font-size: 8px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--green);
+    opacity: 0; transform: translateX(-6px); transition: opacity 0.3s, transform 0.3s;
+}
+.group-card:hover .group-card-enter { opacity: 0.9; transform: translateX(0); }
+.group-card-corner {
+    position: absolute; width: 12px; height: 12px;
+    border-color: var(--green); border-style: solid; opacity: 0.3; transition: opacity 0.3s;
+}
+.group-card:hover .group-card-corner { opacity: 0.8; }
+.group-card-corner.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+.group-card-corner.br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+.group-card-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-family: 'Share Tech Mono', monospace; font-size: 9px;
+    color: rgba(255,255,255,0.2); z-index: 2; letter-spacing: 1px;
+}
+
+/* ══════════════════════════
+   ENTRY VIEW
+   (shown on each group's individual Jcink page)
+══════════════════════════ */
+.entry-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--dim); text-decoration: none;
+    margin-bottom: 18px; transition: color 0.2s;
+}
+.entry-back:hover { color: var(--sc); }
+.entry-back::before { content: '←'; font-size: 12px; }
+
+/* HERO */
+.entry-hero {
+    position: relative; height: 260px; overflow: hidden;
+    border: 1px solid var(--border); margin-bottom: 0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #070707 100%);
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.7); transition: box-shadow 0.4s;
+}
+.entry-hero:hover { box-shadow: inset 0 0 80px rgba(0,0,0,0.4), 0 0 20px rgba(0,0,0,0.5); }
+.entry-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,255,157,0.018) 15px, rgba(0,255,157,0.018) 16px),
+        repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0,255,157,0.018) 15px, rgba(0,255,157,0.018) 16px);
+    opacity: 0.5; pointer-events: none; z-index: 1;
+}
+.entry-hero-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--sc) 50%, transparent);
+    box-shadow: 0 0 16px var(--sc); z-index: 4; opacity: 0.8; transition: opacity 0.3s;
+}
+.entry-hero:hover .entry-hero-bar { opacity: 1; }
+.entry-hero-scan {
+    position: absolute; top: 0; left: -100%; bottom: 0; width: 60%;
+    background: linear-gradient(90deg, transparent, rgba(0,255,157,0.04), transparent);
+    animation: hero-scan-sweep 4s ease-in-out infinite; z-index: 2; pointer-events: none;
+}
+@keyframes hero-scan-sweep { 0%{left:-60%;opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{left:100%;opacity:0} }
+.entry-hero-img { position: absolute; inset: 0; z-index: 0; }
+.entry-hero-img img {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.22;
+    filter: saturate(0.25) brightness(0.6); transition: opacity 0.5s, filter 0.5s;
+}
+.entry-hero:hover .entry-hero-img img { opacity: 0.32; filter: saturate(0.35) brightness(0.7); }
+.entry-hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(5,5,5,0.98) 0%, rgba(5,5,5,0.7) 40%, rgba(5,5,5,0.15) 100%); }
+.entry-hero-overlay-b { position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, #0d0d0d 0%, transparent 45%); }
+.entry-hero-tint { position: absolute; inset: 0; z-index: 1; mix-blend-mode: screen; background: linear-gradient(135deg, rgba(0,255,157,0.06), transparent); }
+.entry-hero-content {
+    position: absolute; inset: 0; z-index: 3;
+    display: grid; grid-template-columns: 1fr 200px; align-items: stretch;
+}
+.entry-hero-left { padding: 28px 36px; display: flex; flex-direction: column; justify-content: flex-end; }
+.entry-hero-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--sc); text-shadow: 0 0 10px var(--sc), 0 0 20px rgba(0,255,157,0.4);
+    opacity: 0.85; margin-bottom: 8px; transition: opacity 0.3s;
+}
+.entry-hero:hover .entry-hero-eyebrow { opacity: 1; }
+.entry-hero-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 36px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px;
+    color: #fff; line-height: 1; margin-bottom: 10px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.8); transition: text-shadow 0.3s;
+}
+.entry-hero:hover .entry-hero-title { text-shadow: 2px 2px 0 rgba(0,0,0,0.9), 0 0 40px var(--sc); }
+.entry-hero-desc { font-size: 13px; color: #999; max-width: 480px; line-height: 1.65; }
+.entry-hero-data {
+    border-left: 1px solid rgba(255,255,255,0.05); padding: 20px 18px;
+    display: flex; flex-direction: column; background: rgba(0,0,0,0.3); position: relative; overflow: hidden;
+}
+.entry-hero-data::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--sc); opacity: 0.15; }
+.entry-hero-stat { display: flex; flex-direction: column; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.entry-hero-stat:last-child { border-bottom: none; }
+.entry-hero-stat-key { font-family: 'Share Tech Mono', monospace; font-size: 7px; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,255,157,0.25); margin-bottom: 2px; }
+.entry-hero-stat-val { font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--sc); text-shadow: 0 0 8px var(--sc); }
+.entry-hero-corner { position: absolute; width: 10px; height: 10px; border-color: var(--sc); border-style: solid; opacity: 0.2; transition: opacity 0.3s, box-shadow 0.3s; z-index: 4; }
+.entry-hero:hover .entry-hero-corner { opacity: 0.7; box-shadow: 0 0 6px var(--sc); }
+.entry-hero-corner.tl { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
+.entry-hero-corner.tr { top: 8px; right: 8px; border-width: 1px 1px 0 0; }
+.entry-hero-corner.bl { bottom: 8px; left: 8px; border-width: 0 0 1px 1px; }
+.entry-hero-corner.br { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
+
+/* BODY: sidebar + content */
+.entry-body {
+    display: grid; grid-template-columns: 175px 1fr;
+    border: 1px solid var(--border); border-top: none; min-height: 500px;
+}
+
+/* SUB SIDEBAR */
+.entry-sub-sidebar {
+    background: rgba(0,0,0,0.45); border-right: 1px solid var(--border); position: relative; overflow: hidden;
+}
+.entry-sub-sidebar::before {
+    content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 2px;
+    background: linear-gradient(180deg, var(--sc), transparent 80%); opacity: 0.5; z-index: 1;
+}
+.entry-sub-header { padding: 14px 14px 10px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.entry-sub-label { font-family: 'Share Tech Mono', monospace; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,255,157,0.3); margin-bottom: 4px; }
+.entry-sub-name { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--sc); line-height: 1.3; }
+.entry-sub-list { overflow-y: auto; padding: 8px 0; scrollbar-width: thin; scrollbar-color: rgba(0,255,157,0.15) transparent; }
+.entry-sub-list::-webkit-scrollbar { width: 3px; }
+.entry-sub-list::-webkit-scrollbar-thumb { background: rgba(0,255,157,0.2); }
+.entry-sub-group-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 7px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.18); padding: 10px 14px 4px 18px;
+}
+.entry-sub-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px 7px 18px; width: 100%; text-align: left;
+    font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: #888; text-decoration: none;
+    border-left: 2px solid transparent; transition: all 0.15s; line-height: 1.2;
+    display: flex;
+}
+.entry-sub-link::before {
+    content: ''; width: 4px; height: 4px;
+    border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; transition: all 0.15s;
+}
+.entry-sub-link:hover { color: var(--text); background: rgba(255,255,255,0.03); border-left-color: rgba(0,255,157,0.3); }
+.entry-sub-link:hover::before { border-color: rgba(0,255,157,0.4); background: rgba(0,255,157,0.2); }
+.entry-sub-link.active { color: var(--sc); background: rgba(0,255,157,0.04); border-left-color: var(--sc); }
+.entry-sub-link.active::before { background: var(--sc); border-color: var(--sc); box-shadow: 0 0 5px var(--sc); }
+
+/* CONTENT PANEL */
+.entry-content-panel { background: var(--bg2); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.entry-content-panel::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(0,255,157,0.007) 24px, rgba(0,255,157,0.007) 25px),
+        repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(0,255,157,0.007) 24px, rgba(0,255,157,0.007) 25px);
+    pointer-events: none; z-index: 0;
+}
+.entry-content-inner { flex: 1; padding: 28px 30px; display: grid; grid-template-columns: 1fr 260px; gap: 28px; position: relative; z-index: 1; }
+
+/* HEADING STYLE A */
+.entry-heading { font-family: 'Share Tech Mono', monospace; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--sc); display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.entry-heading::before { content: ''; width: 3px; height: 18px; background: var(--sc); box-shadow: 0 0 8px var(--sc); flex-shrink: 0; }
+.entry-heading-prefix { color: rgba(0,255,157,0.5); font-size: 10px; }
+
+/* HEADING STYLE B */
+.entry-heading-b { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; margin-top: 22px; }
+.entry-heading-b-label { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #fff; text-shadow: 2px 2px 0 rgba(0,0,0,0.9), 0 0 20px rgba(0,255,157,0.3); white-space: nowrap; flex-shrink: 0; }
+.entry-heading-b-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--sc), transparent); box-shadow: 0 0 8px rgba(0,255,157,0.4); opacity: 0.6; }
+
+/* BYLINE */
+.entry-byline { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--sc); opacity: 0.45; text-transform: uppercase; margin-bottom: 16px; }
+
+.entry-text { font-size: 13px; line-height: 1.8; color: var(--text); margin-bottom: 20px; }
+.entry-text p { margin-bottom: 10px; }
+
+/* INLINE IMAGE */
+.entry-inline-img { float: right; width: 190px; margin: 0 0 16px 20px; border: 1px solid rgba(255,255,255,0.06); background: #000; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.7); transition: border-color 0.3s, box-shadow 0.3s; }
+.entry-inline-img:hover { border-color: var(--sc); }
+.entry-inline-img::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,255,157,0.015) 15px, rgba(0,255,157,0.015) 16px), repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0,255,157,0.015) 15px, rgba(0,255,157,0.015) 16px); pointer-events: none; z-index: 1; opacity: 0.4; }
+.entry-inline-img-scan { position: absolute; top: 0; left: -100%; bottom: 0; width: 60%; background: linear-gradient(90deg, transparent, rgba(0,255,157,0.06), transparent); z-index: 2; pointer-events: none; opacity: 0; }
+.entry-inline-img:hover .entry-inline-img-scan { animation: hero-scan-sweep 1.2s ease-out forwards; opacity: 1; }
+.entry-inline-img-bar { position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 3; background: linear-gradient(90deg, transparent, var(--sc), transparent); opacity: 0; transition: opacity 0.3s; box-shadow: 0 0 8px var(--sc); }
+.entry-inline-img:hover .entry-inline-img-bar { opacity: 1; }
+.entry-inline-img img { display: block; width: 100%; height: 120px; object-fit: cover; opacity: 0.65; filter: saturate(0.4); transition: opacity 0.4s, filter 0.4s; position: relative; z-index: 0; }
+.entry-inline-img:hover img { opacity: 0.85; filter: saturate(0.6); }
+.entry-inline-caption { padding: 5px 8px; font-family: 'Share Tech Mono', monospace; font-size: 8px; color: #777; background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255,255,255,0.05); position: relative; z-index: 1; transition: color 0.3s; }
+.entry-inline-img:hover .entry-inline-caption { color: var(--sc); }
+
+/* IMAGE STRIP */
+.entry-img-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 22px; }
+.entry-strip-img { position: relative; height: 100px; overflow: hidden; background: linear-gradient(135deg, #0a0a0a, #070707); border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 0 30px rgba(0,0,0,0.7); transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; }
+.entry-strip-img:hover { border-color: var(--sc); box-shadow: 0 0 16px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.3); transform: translateY(-2px); }
+.entry-strip-img::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,255,157,0.015) 15px, rgba(0,255,157,0.015) 16px), repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0,255,157,0.015) 15px, rgba(0,255,157,0.015) 16px); pointer-events: none; z-index: 1; opacity: 0.4; }
+.entry-strip-scan { position: absolute; top: 0; left: -100%; bottom: 0; width: 60%; background: linear-gradient(90deg, transparent, rgba(0,255,157,0.06), transparent); z-index: 2; pointer-events: none; opacity: 0; }
+.entry-strip-img:hover .entry-strip-scan { animation: hero-scan-sweep 1.2s ease-out forwards; opacity: 1; }
+.entry-strip-bar { position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 3; background: linear-gradient(90deg, transparent, var(--sc), transparent); opacity: 0; transition: opacity 0.3s; box-shadow: 0 0 8px var(--sc); }
+.entry-strip-img:hover .entry-strip-bar { opacity: 1; }
+.entry-strip-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(0deg, rgba(7,7,7,0.85) 0%, transparent 50%); }
+.entry-strip-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.45; filter: saturate(0.2); transition: opacity 0.4s, filter 0.4s; position: relative; z-index: 0; }
+.entry-strip-img:hover img { opacity: 0.75; filter: saturate(0.55); }
+.entry-strip-label { position: absolute; bottom: 5px; left: 7px; z-index: 3; font-family: 'Share Tech Mono', monospace; font-size: 8px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
+.entry-strip-img:hover .entry-strip-label { color: var(--sc); }
+.entry-strip-corner { position: absolute; width: 7px; height: 7px; border-color: var(--sc); border-style: solid; opacity: 0.15; z-index: 3; transition: opacity 0.3s, box-shadow 0.3s; }
+.entry-strip-img:hover .entry-strip-corner { opacity: 0.8; box-shadow: 0 0 5px var(--sc); }
+.entry-strip-corner.tl { top: 4px; left: 4px; border-width: 1px 0 0 1px; }
+.entry-strip-corner.br { bottom: 4px; right: 4px; border-width: 0 1px 1px 0; }
+
+/* TAGS */
+.entry-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 14px; }
+.entry-tag { padding: 3px 9px; border: 1px solid rgba(255,255,255,0.08); font-family: 'Share Tech Mono', monospace; font-size: 8px; color: #888; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.02); }
+.entry-tag.accent { border-color: var(--sc); color: var(--sc); background: rgba(0,255,157,0.03); opacity: 0.85; }
+
+/* ASIDE */
+.entry-data-card { background: rgba(0,0,0,0.5); border: 1px solid var(--border); margin-bottom: 12px; position: relative; overflow: hidden; }
+.entry-data-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--sc); opacity: 0.4; }
+.entry-data-card-title { font-family: 'Orbitron', sans-serif; font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--sc); padding: 9px 12px 7px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.entry-data-card-body { padding: 10px 12px; }
+.entry-data-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 4px 0; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.entry-data-row:last-child { border-bottom: none; }
+.entry-data-key { font-family: 'Share Tech Mono', monospace; font-size: 8px; color: #777; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; }
+.entry-data-val { font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600; color: var(--text); text-align: right; }
+.entry-aside-img { border: 1px solid rgba(255,255,255,0.06); background: #000; margin-bottom: 12px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.7); transition: border-color 0.3s, box-shadow 0.3s; }
+.entry-aside-img:hover { border-color: var(--sc); }
+.entry-aside-img::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(0,255,157,0.015) 15px, rgba(0,255,157,0.015) 16px), repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0,255,157,0.015) 15px, rgba(0,255,157,0.015) 16px); pointer-events: none; z-index: 1; opacity: 0.4; }
+.entry-aside-scan { position: absolute; top: 0; left: -100%; bottom: 0; width: 60%; background: linear-gradient(90deg, transparent, rgba(0,255,157,0.06), transparent); z-index: 2; pointer-events: none; opacity: 0; }
+.entry-aside-img:hover .entry-aside-scan { animation: hero-scan-sweep 1.2s ease-out forwards; opacity: 1; }
+.entry-aside-bar { position: absolute; top: 0; left: 0; right: 0; height: 1px; z-index: 3; background: linear-gradient(90deg, transparent, var(--sc), transparent); opacity: 0; transition: opacity 0.3s; box-shadow: 0 0 8px var(--sc); }
+.entry-aside-img:hover .entry-aside-bar { opacity: 1; }
+.entry-aside-img img { display: block; width: 100%; height: 150px; object-fit: cover; opacity: 0.6; filter: saturate(0.35); transition: opacity 0.4s, filter 0.4s; position: relative; z-index: 0; }
+.entry-aside-img:hover img { opacity: 0.8; filter: saturate(0.55); }
+.entry-aside-img-label { position: absolute; bottom: 0; left: 0; right: 0; z-index: 3; padding: 5px 8px; font-family: 'Share Tech Mono', monospace; font-size: 8px; color: var(--sc); background: linear-gradient(0deg, rgba(0,0,0,0.9), transparent); letter-spacing: 1px; text-transform: uppercase; }
+
+/* STATUS BAR */
+.entry-status-bar { border-top: 1px solid var(--border); padding: 9px 30px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.35); position: relative; z-index: 1; }
+.entry-status-left { display: flex; align-items: center; gap: 18px; }
+.entry-status-item { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: rgba(0,255,157,0.25); letter-spacing: 1px; text-transform: uppercase; }
+.entry-status-item span { color: rgba(0,255,157,0.55); }
+.entry-nav-arrows { display: flex; gap: 4px; }
+.entry-arrow-btn { padding: 4px 12px; background: rgba(0,255,157,0.03); border: 1px solid var(--border); font-family: 'Share Tech Mono', monospace; font-size: 9px; color: #777; text-decoration: none; display: inline-block; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; }
+.entry-arrow-btn:hover { border-color: var(--sc); color: var(--sc); }
+  
+  
+
+
+        /* ==================== HEADER/TOP BAR ==================== */
+        .cf-grid-site-header {
+            background: linear-gradient(135deg, #0d0d0d 0%, #0a0a0a 100%);
+            border: 1px solid #1a1a1a;
+            padding: 25px 30px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 40px rgba(0, 0, 0, 0.9),
+                inset 0 0 80px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Grid texture */
+        .cf-grid-site-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0, 255, 157, 0.02) 20px, rgba(0, 255, 157, 0.02) 21px),
+                repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0, 255, 157, 0.02) 20px, rgba(0, 255, 157, 0.02) 21px);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        /* Top glow border */
+        .cf-grid-site-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                #00ff9d 20%,
+                #00d4ff 50%,
+                #00ff9d 80%,
+                transparent 100%);
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.6);
+            animation: cf-grid-headerGlow 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes cf-grid-headerGlow {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .cf-grid-header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Site logo/title */
+        .cf-grid-site-logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cf-grid-logo-wrapper {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .cf-grid-logo-icon {
+            width: 60px;
+            height: 60px;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            background: radial-gradient(circle at 30% 30%,
+                rgba(0, 255, 157, 0.3),
+                rgba(0, 0, 0, 0.9));
+            border: 2px solid #00ff9d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 0 25px rgba(0, 255, 157, 0.5),
+                inset 0 0 20px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 2;
+            animation: cf-grid-hexPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes cf-grid-hexPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 25px rgba(0, 255, 157, 0.5),
+                    inset 0 0 20px rgba(0, 0, 0, 0.8);
+            }
+            50% {
+                box-shadow: 
+                    0 0 40px rgba(0, 255, 157, 0.9),
+                    inset 0 0 30px rgba(0, 255, 157, 0.2);
+            }
+        }
+
+        @keyframes cf-grid-logoRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cf-grid-logo-symbol {
+            font-size: 32px;
+            color: #00ff9d;
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.8);
+            z-index: 1;
+        }
+
+        .cf-grid-site-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 40px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-shadow: 
+                3px 3px 0 rgba(0, 0, 0, 0.9),
+                0 0 30px rgba(0, 255, 157, 0.4);
+        }
+
+        .cf-grid-site-title2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-shadow: 
+                3px 3px 0 rgba(0, 0, 0, 0.9),
+                0 0 30px rgba(0, 255, 157, 0.4);
+        }
+
+        /* Header navigation/links */
+        .cf-grid-header-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .cf-grid-header-link {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #888;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cf-grid-header-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(0, 255, 157, 0.2),
+                transparent);
+            transition: left 0.4s ease;
+        }
+
+        .cf-grid-header-link:hover {
+            color: #00ff9d;
+            border-color: #00ff9d;
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
+        }
+
+        .cf-grid-header-link:hover::before {
+            left: 100%;
+        }
+
+.cf-grid-header-link a:link, a:visited, a:active {
+    text-decoration: none;
+    color: #00ff9d;
+}
+
+button.cf-grid-header-link {
+    color: #00ff9d;
+}
+</style>
+
+
+
+<div class="lore-wrapper">
+
+            <!-- HEADER/TOP BAR -->
+        <div class="cf-grid-site-header">
+            <div class="cf-grid-header-content">
+                <div class="cf-grid-site-logo">
+                    <div class="cf-grid-logo-wrapper">
+                        <div class="cf-grid-logo-icon">
+                            <div class="cf-grid-logo-symbol">⬡</div>
+                        </div>
+                    </div>
+                    <div class="cf-grid-site-title" style="font-size: 35px;">The Lorebook</div>
+                </div>
+                
+                <div class="cf-grid-header-nav">
+                    <a href="https://riseoftherangers.jcink.net/" class="cf-grid-header-link">Home</a>
+                    <a href="https://discord.gg/uz7rnzkucB" class="cf-grid-header-link">Discord</a>
+                    <button class="cf-grid-header-link" type="button" onclick="openStaffModal()">Staff</button>
+                </div>
+            </div>
+        </div>
+
+
+    <div class="index-label">// select classification to access field database</div>
+    <div class="index-grid">
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/rangers1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">38 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Active Defense Force</div>
+                <div class="group-card-name">Power Rangers</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 38 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/legacy1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">24 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Retired &amp; Recalled</div>
+                <div class="group-card-name">Legacy Rangers</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 24 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/villains1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">51 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Hostile Actors</div>
+                <div class="group-card-name">Villains</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 51 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/corrupted1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">33 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Grid-Infected Entities</div>
+                <div class="group-card-name">Corrupted</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 33 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/aliens1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">29 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Off-World Contacts</div>
+                <div class="group-card-name">Extraterrestrial</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 29 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/civilians1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">19 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Unaffiliated Populace</div>
+                <div class="group-card-name">Civilians</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 19 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/ancient1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">12 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Pre-Grid Entities</div>
+                <div class="group-card-name">Ancient Ones</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 12 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/command1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">21 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Strategic Leadership</div>
+                <div class="group-card-name">Command</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 21 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/military1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">17 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Conventional Forces</div>
+                <div class="group-card-name">Military</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 17 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/enhanced1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">14 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Augmented Individuals</div>
+                <div class="group-card-name">Enhanced</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 14 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/returned1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">09 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Revenant Contacts</div>
+                <div class="group-card-name">Returned</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 09 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/synthetic1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">11 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Constructed Entities</div>
+                <div class="group-card-name">Synthetic Life</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 11 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="group-card">
+            <div class="group-card-img"><img src="https://picsum.photos/seed/gov1/400/220" alt=""></div>
+            <div class="group-card-wash"></div>
+            <div class="group-card-overlay"></div>
+            <div class="group-card-bar"></div>
+            <div class="group-card-grid"></div>
+            <div class="group-card-corner tl"></div>
+            <div class="group-card-corner br"></div>
+            <div class="group-card-badge">16 entries</div>
+            <div class="group-card-content">
+                <div class="group-card-eyebrow">Institutional Actors</div>
+                <div class="group-card-name">Government</div>
+                <div class="group-card-meta">
+                    <div class="group-card-count">// 16 entries</div>
+                    <div class="group-card-enter">Access →</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     ENTRY PAGE TEMPLATE
+════════════════════════════════════════ -->
+
+<div class="lore-wrapper" style="margin-top: 60px; border-top: 1px solid rgba(0,255,157,0.08); padding-top: 40px;">
+
+    <!-- HEADER/TOP BAR -->
+        <div class="cf-grid-site-header">
+            <div class="cf-grid-header-content">
+                <div class="cf-grid-site-logo">
+                    <div class="cf-grid-logo-wrapper">
+                        <div class="cf-grid-logo-icon">
+                            <div class="cf-grid-logo-symbol">⬡</div>
+                        </div>
+                    </div>
+                    <div class="cf-grid-site-title" style="font-size: 35px;">The Lorebook</div>
+                </div>
+                
+                <div class="cf-grid-header-nav">
+                    <a href="https://riseoftherangers.jcink.net/" class="cf-grid-header-link">Home</a>
+                    <a href="https://discord.gg/uz7rnzkucB" class="cf-grid-header-link">Discord</a>
+                    <button class="cf-grid-header-link" type="button" onclick="openStaffModal()">Staff</button>
+                </div>
+            </div>
+        </div>
+
+    <a href="#" class="entry-back">Back to Index</a>
+
+    <!-- HERO -->
+    <div class="entry-hero">
+        <div class="entry-hero-corner tl"></div>
+        <div class="entry-hero-corner tr"></div>
+        <div class="entry-hero-corner bl"></div>
+        <div class="entry-hero-corner br"></div>
+        <div class="entry-hero-bar"></div>
+        <div class="entry-hero-scan"></div>
+        <div class="entry-hero-img"><img src="https://picsum.photos/seed/rangers1/990/260" alt=""></div>
+        <div class="entry-hero-overlay"></div>
+        <div class="entry-hero-overlay-b"></div>
+        <div class="entry-hero-tint"></div>
+        <div class="entry-hero-content">
+            <div class="entry-hero-left">
+                <div class="entry-hero-eyebrow">// Classification: Active Defense Force</div>
+                <div class="entry-hero-title">Power Rangers</div>
+                <div class="entry-hero-desc">Chosen warriors bonded to the Morphin Grid, tasked with defending the planet against corruption and extraterrestrial threats.</div>
+            </div>
+            <div class="entry-hero-data">
+                <div class="entry-hero-stat"><div class="entry-hero-stat-key">Threat Level</div><div class="entry-hero-stat-val">Variable</div></div>
+                <div class="entry-hero-stat"><div class="entry-hero-stat-key">Grid Bond</div><div class="entry-hero-stat-val">Active</div></div>
+                <div class="entry-hero-stat"><div class="entry-hero-stat-key">Status</div><div class="entry-hero-stat-val">Operational</div></div>
+                <div class="entry-hero-stat"><div class="entry-hero-stat-key">Entries</div><div class="entry-hero-stat-val">38</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="entry-body">
+
+        <!-- SUB SIDEBAR — all links point to real Jcink pages -->
+        <div class="entry-sub-sidebar">
+            <div class="entry-sub-header">
+                <div class="entry-sub-label">// subsections</div>
+                <div class="entry-sub-name group-rangers">Power Rangers</div>
+            </div>
+            <div class="entry-sub-list">
+
+                <div class="entry-sub-group-label">// General</div>
+                <a href="#" class="entry-sub-link active">Overview</a>
+                <a href="#" class="entry-sub-link">Lore &amp; History</a>
+                <a href="#" class="entry-sub-link">Known Members</a>
+                <a href="#" class="entry-sub-link">Threat Assessment</a>
+                <a href="#" class="entry-sub-link">Lore Entries</a>
+
+                <div class="entry-sub-group-label">// Powers &amp; Combat</div>
+                <a href="#" class="entry-sub-link">Abilities</a>
+                <a href="#" class="entry-sub-link">Morphology</a>
+                <a href="#" class="entry-sub-link">Ranger Colors</a>
+                <a href="#" class="entry-sub-link">Zord Index</a>
+                <a href="#" class="entry-sub-link">Weapon Registry</a>
+
+                <div class="entry-sub-group-label">// World</div>
+                <a href="#" class="entry-sub-link">Locations</a>
+                <a href="#" class="entry-sub-link">Angel Grove</a>
+                <a href="#" class="entry-sub-link">Command Center</a>
+                <a href="#" class="entry-sub-link">Known Allies</a>
+                <a href="#" class="entry-sub-link">Known Enemies</a>
+
+            </div>
+        </div>
+
+        <!-- CONTENT PANEL -->
+        <div class="entry-content-panel">
+            <div class="entry-content-inner">
+                <div class="entry-main-col">
+
+                    <div class="entry-heading">
+                        <span class="entry-heading-prefix">// </span><span>Overview</span>
+                    </div>
+                    <div class="entry-byline">Pulled from Lissy's field notes</div>
+
+                    <div class="entry-inline-img">
+                        <div class="entry-inline-img-scan"></div>
+                        <div class="entry-inline-img-bar"></div>
+                        <img src="https://picsum.photos/seed/morph1/300/200" alt="">
+                        <div class="entry-inline-caption">// FIELD REF · SCAN 0041-A</div>
+                    </div>
+
+                    <div class="entry-text">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto.</p>
+                    </div>
+
+                    <div class="entry-heading-b">
+                        <div class="entry-heading-b-label">Visual Field Reference</div>
+                        <div class="entry-heading-b-line"></div>
+                    </div>
+
+                    <div class="entry-img-strip">
+                        <div class="entry-strip-img">
+                            <div class="entry-strip-corner tl"></div>
+                            <div class="entry-strip-corner br"></div>
+                            <div class="entry-strip-scan"></div>
+                            <div class="entry-strip-bar"></div>
+                            <div class="entry-strip-overlay"></div>
+                            <img src="https://picsum.photos/seed/loc1/400/200" alt="">
+                            <div class="entry-strip-label">Location Alpha</div>
+                        </div>
+                        <div class="entry-strip-img">
+                            <div class="entry-strip-corner tl"></div>
+                            <div class="entry-strip-corner br"></div>
+                            <div class="entry-strip-scan"></div>
+                            <div class="entry-strip-bar"></div>
+                            <div class="entry-strip-overlay"></div>
+                            <img src="https://picsum.photos/seed/loc2/400/200" alt="">
+                            <div class="entry-strip-label">Location Beta</div>
+                        </div>
+                        <div class="entry-strip-img">
+                            <div class="entry-strip-corner tl"></div>
+                            <div class="entry-strip-corner br"></div>
+                            <div class="entry-strip-scan"></div>
+                            <div class="entry-strip-bar"></div>
+                            <div class="entry-strip-overlay"></div>
+                            <img src="https://picsum.photos/seed/loc3/400/200" alt="">
+                            <div class="entry-strip-label">Location Gamma</div>
+                        </div>
+                    </div>
+
+                    <div class="entry-text">
+                        <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est qui dolorem ipsum.</p>
+                    </div>
+
+                    <div class="entry-tags">
+                        <div class="entry-tag accent">Morphin Grid</div>
+                        <div class="entry-tag accent">Operational</div>
+                        <div class="entry-tag">Angel Grove</div>
+                        <div class="entry-tag">Grid Bonded</div>
+                        <div class="entry-tag">Zord Capable</div>
+                    </div>
+
+                </div>
+                <div class="entry-aside">
+                    <div class="entry-aside-img">
+                        <div class="entry-aside-scan"></div>
+                        <div class="entry-aside-bar"></div>
+                        <img src="https://picsum.photos/seed/aside1/400/300" alt="">
+                        <div class="entry-aside-img-label">// power rangers · field scan</div>
+                    </div>
+                    <div class="entry-data-card">
+                        <div class="entry-data-card-title">// Classification Data</div>
+                        <div class="entry-data-card-body">
+                            <div class="entry-data-row"><div class="entry-data-key">Status</div><div class="entry-data-val">Active</div></div>
+                            <div class="entry-data-row"><div class="entry-data-key">Grid Bond</div><div class="entry-data-val">Confirmed</div></div>
+                            <div class="entry-data-row"><div class="entry-data-key">Threat Lvl</div><div class="entry-data-val">Variable</div></div>
+                            <div class="entry-data-row"><div class="entry-data-key">Origin</div><div class="entry-data-val">Earth</div></div>
+                        </div>
+                    </div>
+                    <div class="entry-aside-img">
+                        <div class="entry-aside-scan"></div>
+                        <div class="entry-aside-bar"></div>
+                        <img src="https://picsum.photos/seed/aside2/400/300" alt="">
+                        <div class="entry-aside-img-label">// secondary ref scan</div>
+                    </div>
+                    <div class="entry-data-card">
+                        <div class="entry-data-card-title">// Field Notes</div>
+                        <div class="entry-data-card-body">
+                            <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#888;line-height:1.7;">Lorem ipsum dolor sit amet consectetur. Sed eiusmod tempor incididunt labore.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="entry-status-bar">
+                <div class="entry-status-left">
+                    <div class="entry-status-item">Section: <span>Power Rangers</span></div>
+                    <div class="entry-status-item">Page: <span>Overview</span></div>
+                </div>
+                <div class="entry-nav-arrows">
+                    <a href="#" class="entry-arrow-btn">← Back to Index</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Design 5</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 20%),
+        #050505;
+      color: #ffffff;
+      font-family: Georgia, "Times New Roman", serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .page-shell {
+      width: min(100%, 1100px);
+      min-height: min(88vh, 860px);
+      display: grid;
+      align-content: space-between;
+      padding: clamp(24px, 4vw, 54px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 32px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
+        rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .topbar,
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand,
+    .footer p {
+      margin: 0;
+      font-size: 0.92rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .nav-links a {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .message {
+      display: grid;
+      gap: 10px;
+      align-self: center;
+    }
+
+    .line {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: clamp(28px, 4vw, 46px);
+      animation: drift 4s ease-in-out infinite;
+    }
+
+    .line:nth-child(2) { animation-delay: 0.12s; }
+    .line:nth-child(3) { animation-delay: 0.24s; }
+    .line:nth-child(4) { animation-delay: 0.36s; }
+    .line:nth-child(5) { animation-delay: 0.48s; }
+    .line:nth-child(6) { animation-delay: 0.60s; }
+
+    .bar {
+      height: 2px;
+      flex: 1 1 auto;
+      background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.18));
+      border-radius: 999px;
+      opacity: 0.9;
+      min-width: 42px;
+    }
+
+    .word {
+      flex: 0 0 auto;
+      font-size: clamp(2.1rem, 6vw, 6rem);
+      line-height: 0.95;
+      white-space: nowrap;
+    }
+
+    .summary {
+      max-width: 52ch;
+      margin: 24px 0 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-family: Arial, sans-serif;
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+
+    @keyframes drift {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      50% {
+        transform: translateX(18px);
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 16px;
+        display: block;
+      }
+
+      .page-shell {
+        min-height: auto;
+        gap: 40px;
+      }
+
+      .line {
+        gap: 10px;
+      }
+
+      .summary {
+        margin-top: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="topbar">
+      <p class="brand">Portfolio Design 5 / Last Page</p>
+      <nav class="nav-links">
+        <a href="./index.html">Home</a>
+        <a href="./design2.html">Projects</a>
+        <a href="./hobby.html">Hobby</a>
+      </nav>
+    </header>
+
+    <section class="message" aria-label="Closing message">
+      <div class="line">
+        <span class="bar"></span>
+        <span class="word">Learn</span>
+        <span class="bar"></span>
+      </div>
+      <div class="line">
+        <span class="bar"></span>
+        <span class="word">Experiment</span>
+        <span class="bar"></span>
+      </div>
+      <div class="line">
+        <span class="bar"></span>
+        <span class="word">Have Fun</span>
+        <span class="bar"></span>
+      </div>
+      <div class="line">
+        <span class="bar"></span>
+        <span class="word">Keep</span>
+        <span class="bar"></span>
+      </div>
+      <div class="line">
+        <span class="bar"></span>
+        <span class="word">Moving</span>
+        <span class="bar"></span>
+      </div>
+      <p class="summary">
+        Design 5 now works as the last page of the portfolio, closing the journey with
+        a simple note about curiosity, practice, and building consistently over time.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p>Ankur Portfolio</p>
+      <p>Design 5 • Final Screen</p>
+    </footer>
+  </main>
+</body>
+</html>

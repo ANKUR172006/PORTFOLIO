@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        :root {
+	--font-size-min: 14;
+	--font-size-max: 20;
+	--font-ratio-min: 1.1;
+	--font-ratio-max: 1.33;
+	--font-width-min: 375;
+	--font-width-max: 1500;
+
+	--start: 0;
+	--end: 360;
+	--lightness: 65%;
+	--base-chroma: 0.3;
+}
+
+html {
+	color-scheme: dark;
+}
+
+body {
+	background: black;
+	color: white;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: "webfont", sans-serif;
+	background-color: black;
+}
+
+.fluid {
+	--fluid-min: calc(
+		var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
+	);
+	--fluid-max: calc(
+		var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
+	);
+	--fluid-preferred: calc(
+		(var(--fluid-max) - var(--fluid-min)) /
+			(var(--font-width-max) - var(--font-width-min))
+	);
+
+	font-size: clamp(
+		(var(--fluid-min) / 16) * 1rem,
+		((var(--fluid-min) / 16) * 1rem) -
+			(((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+			(var(--fluid-preferred) * 100vi),
+		(var(--fluid-max) / 16) * 1rem
+	);
+}
+
+.section-centered {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.word-scroll {
+	--font-level: 5;
+	width: 100%;
+}
+
+.word-scroll-inner {
+	display: flex;
+	justify-content: center;
+	line-height: 1.25;
+}
+
+.word-scroll-inner h2 {
+	position: sticky;
+	top: calc(50vh - 0.5lh);
+	margin: 0;
+	font-size: inherit;
+	font-weight: 500;
+	height: fit-content;
+}
+
+.word-scroll-inner ul {
+	font-weight: 500;
+	list-style: none;
+	margin: 0;
+	padding-block: calc(50vh - 0.5lh);
+	padding-left: 0;
+	--step: calc((var(--end) - var(--start)) / (var(--count) - 1));
+}
+
+.word-scroll[data-snap="true"] {
+	height: 100vh;
+	overflow-y: auto;
+	scroll-snap-type: y proximity;
+}
+
+.word-scroll[data-snap="true"] li {
+	scroll-snap-align: center;
+}
+
+[data-sync-scrollbar="true"] {
+	scrollbar-color: oklch(var(--lightness) var(--chroma, 0) var(--hue))
+		transparent;
+}
+
+.word-scroll li:not(:last-of-type) {
+	color: oklch(
+		var(--lightness) var(--base-chroma)
+			calc(var(--start) + (var(--step) * var(--i)))
+	);
+}
+
+.word-scroll h2 {
+	background: linear-gradient(180deg, #ffffff 50%, rgba(255, 255, 255, 0.3) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+}
+
+[data-animate="true"] li {
+	opacity: 0.2;
+	transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+[data-animate="true"] li:first-of-type {
+	opacity: 1;
+}
+
+[data-animate="true"] li:last-of-type {
+	background: linear-gradient(180deg, #ffffff 50%, rgba(255, 255, 255, 0.3) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+    </style>
+</head>
+<body>
+   <section class="word-scroll fluid">
+  <div class="scroll-spacer"></div>
+
+		<div class="word-scroll-inner">
+			<h2 class="heading-2 heading-sm">
+				<span aria-hidden="true">I build&nbsp;</span>
+				<span class="sr-only">I build products, systems, platforms, and infrastructure.</span>
+			</h2>
+			<ul>
+				<li>products.</li>
+				<li>platforms.</li>
+				<li>web applications.</li>
+				<li>interfaces.</li>
+				<li>design systems.</li>
+				<li>API platforms.</li>
+				<li>backend services.</li>
+				<li>distributed systems.</li>
+				<li>data architectures.</li>
+				<li>automation pipelines.</li>
+				<li>infrastructure.</li>
+				<li>developer tooling.</li>
+				<li>performance systems.</li>
+				<li>edge platforms.</li>
+				<li>secure systems.</li>
+				<li>resilient architectures.</li>
+				<li>scalable software.</li>
+				<li>technical foundations.</li>
+			</ul>
+		</div>
+  <div class="scroll-spacer"></div>
+</section> 
+<script>
+    const WordScroll = (() => {
+
+  const defaults = {
+    snap: true,
+    animate: true,
+    start: Math.floor(Math.random() * 100),
+    end: Math.floor(900 + Math.random() * 100),
+    startIndex: 0,
+    debug: false
+  };
+
+  const init = (selector = ".word-scroll", options = {}) => {
+
+    const root = document.querySelector(selector);
+    if (!root) return;
+
+    const config = { ...defaults, ...options };
+
+    const list = root.querySelector("ul");
+    const items = [...list.children];
+
+    list.style.setProperty("--count", items.length);
+
+    items.forEach((item, i) => {
+      item.style.setProperty("--i", i);
+    });
+
+    root.dataset.snap = config.snap;
+    root.dataset.animate = config.animate;
+    root.dataset.debug = config.debug;
+
+    root.style.setProperty("--start", config.start);
+    root.style.setProperty("--hue", config.start);
+    root.style.setProperty("--end", config.end);
+
+    const index = Math.max(0, Math.min(config.startIndex, items.length - 1));
+    const target = items[index];
+
+    const handleScroll = () => {
+      const scrollCenter = root.scrollTop + root.clientHeight / 2;
+      items.forEach(item => {
+        const itemCenter = item.offsetTop + item.clientHeight / 2;
+        const distance = Math.abs(scrollCenter - itemCenter);
+        if (distance < 50) {
+          item.style.opacity = "1";
+          item.style.filter = "brightness(1.4)";
+        } else {
+          item.style.opacity = "0.2";
+          item.style.filter = "brightness(1)";
+        }
+      });
+    };
+
+    if (config.animate) {
+      root.addEventListener("scroll", handleScroll);
+    }
+
+    if (target) {
+      requestAnimationFrame(() => {
+        const offset = target.offsetTop - (root.clientHeight / 2) + (target.clientHeight / 2);
+        root.scrollTop = offset;
+        handleScroll();
+      });
+    }
+
+  };
+
+  return { init };
+
+})();
+
+WordScroll.init(".word-scroll", {
+  snap: true,
+  animate: true,
+  start: 25,
+  end: 100,
+  startIndex: 4
+});
+</script>
+</body>
+</html>

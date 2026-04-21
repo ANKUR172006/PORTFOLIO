@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --black: #0a0a0b;
+      --deep: #111113;
+      --surface: #18181c;
+      --surface2: #1f1f25;
+      --border: #2a2a32;
+      --red: #8b1a1a;
+      --red-hot: #c0271f;
+      --muted: #4a4a55;
+      --dim: #6b6b7a;
+      --text: #c8c8d4;
+      --light: #e8e8f0;
+      --white: #f4f0eb;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background-color: var(--black);
+      color: var(--text);
+      font-family: "Crimson Pro", Georgia, serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 60;
+      opacity: 0.4;
+    }
+
+    canvas {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .quick-links {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      height: 58px;
+      background: rgba(10, 10, 11, 0.88);
+      backdrop-filter: blur(20px) saturate(1.4);
+      border-bottom: 1px solid rgba(42, 42, 50, 0.8);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    .quick-links::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--red-hot) 0%, transparent 45%);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 22px;
+      border-right: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-mark {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--red);
+      display: grid;
+      place-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .nav-mark::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border: 1px solid #6b1212;
+    }
+
+    .nav-mark svg {
+      width: 12px;
+      height: 12px;
+      fill: var(--red-hot);
+    }
+
+    .nav-brand-copy {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .nav-brand-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.14em;
+      color: var(--white);
+    }
+
+    .nav-brand-subtitle {
+      margin-top: 2px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.42rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-hot);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 18px;
+      position: relative;
+      text-decoration: none;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.54rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--dim);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--red-hot);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--white);
+    }
+
+    .nav-links a:hover::before,
+    .nav-links a:focus-visible::before {
+      transform: scaleX(1);
+    }
+
+    .nav-index {
+      color: var(--muted);
+      font-size: 0.44rem;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: stretch;
+      border-left: 1px solid var(--border);
+    }
+
+    .nav-btn {
+      position: relative;
+      width: 46px;
+      display: grid;
+      place-items: center;
+      border-left: 1px solid var(--border);
+      text-decoration: none;
+      background: transparent;
+      transition: background 0.15s ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn:focus-visible {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-btn svg {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: var(--muted);
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.15s ease;
+    }
+
+    .nav-btn:hover svg,
+    .nav-btn:focus-visible svg {
+      stroke: var(--light);
+    }
+
+    .nav-tip {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-2px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 6px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 1px solid var(--red-hot);
+      color: var(--text);
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.4rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .nav-btn:hover .nav-tip,
+    .nav-btn:focus-visible .nav-tip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 20;
+    }
+
+    .hero-card {
+      width: min(720px, 100%);
+      padding: clamp(24px, 4vw, 40px);
+      border-radius: 0;
+      background: rgba(24, 24, 28, 0.78);
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      color: var(--white);
+      pointer-events: auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 88px;
+      height: 2px;
+      background: var(--red-hot);
+    }
+
+    .scroll-story {
+      position: relative;
+      z-index: 20;
+      padding: 18vh clamp(24px, 4vw, 48px) 18vh;
+    }
+
+    .story-section {
+      min-height: 100vh;
+      display: grid;
+      align-items: center;
+    }
+
+    .story-card {
+      position: sticky;
+      top: 14vh;
+      width: min(720px, 100%);
+    }
+
+    .story-step {
+      margin: 0 0 12px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red-hot);
+    }
+
+    .story-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .story-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      background: rgba(17, 17, 19, 0.86);
+      color: var(--white);
+      text-decoration: none;
+      font-family: "Share Tech Mono", monospace;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.56rem;
+      transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .story-link:hover {
+      transform: translateY(-2px);
+      border-color: var(--muted);
+      color: var(--light);
+    }
+
+    .story-link svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: var(--red-hot);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .story-link-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-start;
+    }
+
+    .story-link-label {
+      color: var(--white);
+    }
+
+    .story-link-meta {
+      font-size: 0.44rem;
+      color: var(--dim);
+    }
+
+    .hero-kicker {
+      margin: 0 0 12px;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--red-hot);
+    }
+
+    .hero-title {
+      margin: 0;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-role {
+      margin: 12px 0 0;
+      font-family: "Crimson Pro", serif;
+      font-style: italic;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      color: var(--light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero-text {
+      margin: 18px 0 0;
+      max-width: 54ch;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text);
+      font-family: "Crimson Pro", Georgia, serif;
+    }
+
+    .fallback-hero {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: end start;
+      padding: clamp(24px, 4vw, 48px);
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.72)),
+        url("https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop")
+          center / cover no-repeat;
+      z-index: 0;
+    }
+
+    .fallback-hero__card {
+      max-width: 620px;
+      padding: 24px 28px;
+      border: 1px solid var(--border);
+      background: rgba(24, 24, 28, 0.55);
+      backdrop-filter: blur(14px);
+      color: var(--white);
+    }
+
+    .fallback-hero__eyebrow {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red-hot);
+    }
+
+    .fallback-hero__title {
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .fallback-hero__text {
+      margin: 14px 0 0;
+      max-width: 46ch;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .webgl-ready .fallback-hero {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    @media (max-width: 700px) {
+      .quick-links {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .scroll-story {
+        padding: 22vh 16px 12vh;
+      }
+
+      .story-card {
+        top: 11vh;
+      }
+
+      .nav-brand {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        justify-content: center;
+        padding: 14px 16px;
+      }
+
+      .nav-links {
+        justify-content: space-between;
+        overflow-x: auto;
+      }
+
+      .nav-links a {
+        padding: 14px 12px;
+        white-space: nowrap;
+      }
+
+      .nav-actions {
+        justify-content: center;
+        border-left: none;
+        border-top: 1px solid var(--border);
+      }
+
+      .story-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .story-link {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="quick-links">
+    <a class="nav-brand" href="#home">
+      <span class="nav-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9Z"></path>
+        </svg>
+      </span>
+      <span class="nav-brand-copy">
+        <span class="nav-brand-title">Ankur</span>
+        <span class="nav-brand-subtitle">Portfolio Archive</span>
+      </span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#home"><span class="nav-index">00</span> Home</a>
+      <a href="#projects"><span class="nav-index">01</span> Projects</a>
+      <a href="#hobby"><span class="nav-index">02</span> Hobby</a>
+      <a href="#final"><span class="nav-index">03</span> Final</a>
+    </div>
+
+    <div class="nav-actions" aria-label="Quick actions">
+      <a class="nav-btn" href="#home" aria-label="Home section">
+        <span class="nav-tip">Home</span>
+        <svg viewBox="0 0 24 24">
+          <path d="M3 10.5 12 3l9 7.5"></path>
+          <path d="M5 9.5V21h14V9.5"></path>
+        </svg>
+      </a>
+      <a class="nav-btn" href="./design2.html" aria-label="Open projects page">
+        <span class="nav-tip">Projects</span>
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="14" rx="1"></rect>
+          <path d="M7 20h10"></path>
+          <path d="M9 8h6"></path>
+          <path d="M9 12h3"></path>
+        </svg>
+      </a>
+      <a class="nav-btn" href="./hobby.html" aria-label="Open hobby page">
+        <span class="nav-tip">Hobby</span>
+        <svg viewBox="0 0 24 24">
+          <path d="M12 21s-6-3.35-8.5-7.27C1.74 11.05 3 7 6.8 7c2.08 0 3.2 1.16 4.2 2.6C12 8.16 13.12 7 15.2 7 19 7 20.26 11.05 20.5 13.73 18 17.65 12 21 12 21Z"></path>
+        </svg>
+      </a>
+      <a class="nav-btn" href="./design5.html" aria-label="Open final page">
+        <span class="nav-tip">Final</span>
+        <svg viewBox="0 0 24 24">
+          <path d="M5 12h14"></path>
+          <path d="M13 6l6 6-6 6"></path>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+  <section class="fallback-hero" aria-hidden="true">
+    <div class="fallback-hero__card">
+      <p class="fallback-hero__eyebrow">Portfolio Home</p>
+      <h1 class="fallback-hero__title">Design 6</h1>
+      <p class="fallback-hero__text">
+        Interactive glass hero effect with image upload controls. If WebGL or external
+        modules fail, this fallback hero stays visible instead of a black screen.
+      </p>
+    </div>
+  </section>
+
+  <main class="scroll-story">
+    <section class="story-section hero-content" id="home">
+      <div class="hero-card story-card">
+        <p class="hero-kicker">Portfolio</p>
+        <h1 class="hero-title">Ankur</h1>
+        <p class="hero-role">Frontend Developer</p>
+        <p class="hero-text">
+          I design and build modern interfaces with a focus on smooth interaction,
+          clean layout, and bold visual presentation. Scroll to explore the portfolio
+          one page at a time from the home screen.
+        </p>
+        <div class="story-actions">
+          <a class="story-link" href="./design2.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="14" rx="1"></rect>
+              <path d="M7 20h10"></path>
+              <path d="M9 8h6"></path>
+              <path d="M9 12h3"></path>
+            </svg>
+            <span class="story-link-text">
+              <span class="story-link-label">Open Projects Page</span>
+              <span class="story-link-meta">Primary work and selected builds</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" id="projects">
+      <article class="hero-card story-card">
+        <p class="story-step">Page 1</p>
+        <h2 class="hero-title">Projects</h2>
+        <p class="hero-text">
+          A focused view of project work, experiments, and interface direction. This
+          section acts like the first stop in the portfolio flow.
+        </p>
+        <div class="story-actions">
+          <a class="story-link" href="./design2.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="14" rx="1"></rect>
+              <path d="M7 20h10"></path>
+              <path d="M9 8h6"></path>
+              <path d="M9 12h3"></path>
+            </svg>
+            <span class="story-link-text">
+              <span class="story-link-label">Visit Projects</span>
+              <span class="story-link-meta">Open page 01 in the portfolio flow</span>
+            </span>
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section class="story-section" id="hobby">
+      <article class="hero-card story-card">
+        <p class="story-step">Page 2</p>
+        <h2 class="hero-title">Hobby</h2>
+        <p class="hero-text">
+          Nature photography adds a calmer, more personal side to the portfolio. It
+          brings in observation, mood, and visual storytelling outside of code.
+        </p>
+        <div class="story-actions">
+          <a class="story-link" href="./hobby.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21s-6-3.35-8.5-7.27C1.74 11.05 3 7 6.8 7c2.08 0 3.2 1.16 4.2 2.6C12 8.16 13.12 7 15.2 7 19 7 20.26 11.05 20.5 13.73 18 17.65 12 21 12 21Z"></path>
+            </svg>
+            <span class="story-link-text">
+              <span class="story-link-label">Visit Hobby Page</span>
+              <span class="story-link-meta">Photography, mood, and personal work</span>
+            </span>
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section class="story-section" id="final">
+      <article class="hero-card story-card">
+        <p class="story-step">Page 3</p>
+        <h2 class="hero-title">Design 5</h2>
+        <p class="hero-text">
+          The closing page now sits at the end of the portfolio journey. Scroll reaches
+          it last, then the dedicated page carries the final message.
+        </p>
+        <div class="story-actions">
+          <a class="story-link" href="./design5.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="M13 6l6 6-6 6"></path>
+            </svg>
+            <span class="story-link-text">
+              <span class="story-link-label">Open Final Page</span>
+              <span class="story-link-meta">Closing screen and last portfolio note</span>
+            </span>
+          </a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <input type="file" id="fileInput" accept="image/*" />
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from "three";
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.setAttribute("aria-hidden", "true");
+    document.body.appendChild(renderer.domElement);
+
+    const loader = new THREE.TextureLoader();
+    loader.setCrossOrigin("anonymous");
+    const defaultImgUrl =
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop";
+
+    let glassMaterial;
+
+    function createFallbackTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1600;
+      canvas.height = 1000;
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) {
+        return new THREE.Texture();
+      }
+
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, "#1a1f36");
+      gradient.addColorStop(0.5, "#3e5c76");
+      gradient.addColorStop(1, "#f4a261");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "rgba(255,255,255,0.12)";
+      for (let i = 0; i < 18; i += 1) {
+        ctx.beginPath();
+        ctx.arc(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height,
+          40 + Math.random() * 140,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
+
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.font = "700 84px Arial";
+      ctx.fillText("Portfolio Home", 120, 170);
+      ctx.font = "32px Arial";
+      ctx.fillText("Fallback texture loaded because the remote image was unavailable.", 120, 230);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+      return texture;
+    }
+
+    function bootScene(texture) {
+      setupTexture(texture);
+      createScene(texture);
+    }
+
+    loader.load(
+      defaultImgUrl,
+      (texture) => {
+        bootScene(texture);
+      },
+      undefined,
+      () => {
+        bootScene(createFallbackTexture());
+      },
+    );
+
+    function setupTexture(texture) {
+      texture.wrapS = THREE.ClampToEdgeWrapping;
+      texture.wrapT = THREE.ClampToEdgeWrapping;
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+    }
+
+    function createScene(initialTexture) {
+      document.documentElement.classList.add("webgl-ready");
+
+      const vertexShader = `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = vec4(position, 1.0);
+        }
+      `;
+
+      const fragmentShader = `
+        uniform sampler2D tDiffuse;
+        uniform vec2 uResolution;
+        uniform vec2 uImageRes;
+        uniform float uFrequency;
+        uniform float uRotation;
+        uniform float uDistortion;
+        uniform float uCurvePow;
+        uniform float uLineWidth;
+        uniform float uLineIntensity;
+        uniform float uTime;
+        uniform float uSpeed;
+        varying vec2 vUv;
+
+        mat2 rotate2d(float angleValue) {
+          return mat2(cos(angleValue), -sin(angleValue), sin(angleValue), cos(angleValue));
+        }
+
+        vec2 getCoverUv(vec2 uv, vec2 resolution, vec2 texResolution) {
+          vec2 s = resolution;
+          vec2 i = texResolution;
+          float rs = s.x / s.y;
+          float ri = i.x / i.y;
+          vec2 scaled = rs < ri ? vec2(i.x * s.y / i.y, s.y) : vec2(s.x, i.y * s.x / i.x);
+          vec2 offset =
+            (rs < ri ? vec2((scaled.x - s.x) / 2.0, 0.0) : vec2(0.0, (scaled.y - s.y) / 2.0))
+            / scaled;
+          return uv * s / scaled + offset;
+        }
+
+        void main() {
+          vec2 uv = getCoverUv(vUv, uResolution, uImageRes);
+          vec2 centered = uv - 0.5;
+          vec2 rotated = rotate2d(uRotation) * centered;
+          float patternPhase = rotated.x * uFrequency + (uTime * uSpeed);
+          float p = fract(patternPhase);
+          float shapedP = pow(p, uCurvePow);
+          float displacement = (shapedP - 0.5) * uDistortion;
+          vec2 offsetVector = rotate2d(-uRotation) * vec2(displacement, 0.0);
+          float r = texture2D(tDiffuse, uv + offsetVector).r;
+          float g = texture2D(tDiffuse, uv + offsetVector * 1.01 + vec2(0.002, 0.0)).g;
+          float b = texture2D(tDiffuse, uv + offsetVector * 1.02 + vec2(0.004, 0.0)).b;
+          vec3 color = vec3(r, g, b);
+          float line = smoothstep(1.0 - uLineWidth, 1.0, p);
+          color += vec3(line * uLineIntensity);
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `;
+
+      const initialParams = {
+        frequency: 9.025,
+        rotationDeg: 136.08,
+        curvePow: 0.1,
+        distortion: 0.05,
+        lineWidth: 0.015,
+        lineIntensity: 0.06,
+        speed: 0.184,
+      };
+
+      glassMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          tDiffuse: { value: initialTexture },
+          uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+          uImageRes: {
+            value: new THREE.Vector2(initialTexture.image.width, initialTexture.image.height),
+          },
+          uTime: { value: 0 },
+          uFrequency: { value: initialParams.frequency },
+          uRotation: { value: initialParams.rotationDeg * (Math.PI / 180) },
+          uDistortion: { value: initialParams.distortion },
+          uCurvePow: { value: initialParams.curvePow },
+          uLineWidth: { value: initialParams.lineWidth },
+          uLineIntensity: { value: initialParams.lineIntensity },
+          uSpeed: { value: initialParams.speed },
+        },
+        vertexShader,
+        fragmentShader,
+      });
+
+      const geometry = new THREE.PlaneGeometry(2, 2);
+      const mesh = new THREE.Mesh(geometry, glassMaterial);
+      scene.add(mesh);
+
+      window.addEventListener("resize", () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        glassMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+      });
+
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        glassMaterial.uniforms.uTime.value = clock.getElapsedTime();
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    }
+  </script>
+</body>
+</html>
