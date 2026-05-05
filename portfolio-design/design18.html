@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .fixed-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border: dashed 1px #555;
+  z-index: 2;
+}
+
+.fixed-container .logo-container {
+  height: 60px;
+}
+
+.fixed-container .logo-container img {
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.hero-logo-container {
+  height: 250px;
+  border: 2px dashed var(--light);
+
+  img {
+    opacity: 0;
+    visibility: hidden;
+    user-select: none;
+  }
+}
+
+</style>
+<body>
+    @keyframes bend-it-like-beckham {
+  from {
+    corner-shape: superellipse(-6);
+  }
+
+  to {
+    corner-shape: superellipse(6);
+  }
+}
+
+body::before {
+  /* Fill (+ 1rem) */
+  content: "";
+  position: fixed;
+  inset: -1rem;
+
+  /* Enable click-through */
+  pointer-events: none;
+
+  /* Invert underlying layer */
+  mix-blend-mode: difference;
+  background: white;
+
+  /* Don’t forget this! */
+  border-bottom-left-radius: 100%;
+
+  /* Animation settings */
+  animation: bend-it-like-beckham;
+  animation-timeline: scroll();
+}
+
+/* Added to cards */
+.no-filter {
+  isolation: isolate;
+}
+
+/* Ignore */
+
+* {
+  margin: unset;
+  text-box: cap alphabetic;
+}
+
+:root {
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  scrollbar-width: none;
+
+  body {
+    background: #b7245c;
+
+    section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:nth-child(odd) {
+        height: 100vh;
+      }
+
+      &:nth-child(even) {
+        padding: 10vw 0;
+        border-block: 0.0625rem solid #00000030;
+      }
+
+      .center {
+        color: white;
+
+        h1 {
+          font: 900 5.0625rem figtree;
+        }
+
+        h2 {
+          text-align: center;
+          font: 900 3.375rem figtree;
+        }
+
+        #cards {
+          display: flex;
+          gap: 2.25rem;
+          margin-top: 3.375rem;
+
+          article {
+            color: black;
+            background: white;
+            padding: 2.25rem;
+            display: grid;
+            gap: 1.5rem;
+            border-radius: 5rem;
+            corner-shape: squircle;
+
+            h3 {
+              font: 900 2.25rem figtree;
+            }
+
+            p {
+              font: 700 1.5rem figtree;
+            }
+
+            button {
+              color: white;
+              background: #b7245c;
+              border: none;
+              height: 3rem;
+              width: fit-content;
+              padding: 0 1.5rem;
+              font: 700 1rem figtree;
+              border-radius: 5rem;
+              corner-shape: squircle;
+
+              &:hover {
+                cursor: pointer;
+                filter: brightness(110%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+<script>
+    console.clear();
+
+gsap.registerPlugin(Flip, ScrollTrigger);
+
+const fixedLogo = document.getElementById("fixedLogo");
+const heroLogo = document.getElementById("heroLogo");
+const flip = Flip.fit(fixedLogo, "#heroLogo", {
+  ease: "power2.inOut",
+  duration: 0.5
+})
+  .pause()
+  .progress(1);
+
+gsap.set(fixedLogo, { autoAlpha: 1 });
+
+ScrollTrigger.create({
+  trigger: ".hero.panel",
+  start: "bottom 75%",
+  end: "bottom 75%",
+  markers: true,
+  onEnter: () => flip.reverse(),
+  onEnterBack: () => flip.play()
+});
+
+</script>
+</body>
+</html>

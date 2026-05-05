@@ -2,18 +2,32 @@ let globalAudioCtx = null;
 
 export const getAudioCtx = () => {
   if (typeof window === "undefined") return null;
+  
   if (!globalAudioCtx) {
     globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
+  
+  // Check if context is suspended (common browser policy)
   if (globalAudioCtx.state === "suspended") {
-    globalAudioCtx.resume();
+    globalAudioCtx.resume().catch(err => console.warn("AudioContext resume failed:", err));
   }
+  
   return globalAudioCtx;
+};
+
+// Helper to clean up audio nodes after playing
+const setupCleanup = (osc, gain, ctx, duration) => {
+  osc.onended = () => {
+    osc.disconnect();
+    gain.disconnect();
+  };
 };
 
 export const playRevealSound = (freq = 400, type = "sine", duration = 0.6) => {
   try {
     const ctx = getAudioCtx();
+    if (!ctx || ctx.state !== "running") return;
+
     const t = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -28,14 +42,21 @@ export const playRevealSound = (freq = 400, type = "sine", duration = 0.6) => {
     
     osc.connect(gain);
     gain.connect(ctx.destination);
+    
+    setupCleanup(osc, gain, ctx, duration);
+    
     osc.start(t);
     osc.stop(t + duration);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Audio error (playRevealSound):", e);
+  }
 };
 
 export const playCuteSound = (freq = 1000, volume = 0.03) => {
   try {
     const ctx = getAudioCtx();
+    if (!ctx || ctx.state !== "running") return;
+
     const t = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -50,14 +71,21 @@ export const playCuteSound = (freq = 1000, volume = 0.03) => {
 
     osc.connect(gain);
     gain.connect(ctx.destination);
+    
+    setupCleanup(osc, gain, ctx, 0.08);
+
     osc.start(t);
     osc.stop(t + 0.08);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Audio error (playCuteSound):", e);
+  }
 };
 
 export const playStaggerPop = (freq = 1200, delay = 0) => {
   try {
     const ctx = getAudioCtx();
+    if (!ctx || ctx.state !== "running") return;
+
     const t = ctx.currentTime + delay;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -71,14 +99,21 @@ export const playStaggerPop = (freq = 1200, delay = 0) => {
     
     osc.connect(gain);
     gain.connect(ctx.destination);
+    
+    setupCleanup(osc, gain, ctx, 0.08);
+
     osc.start(t);
     osc.stop(t + 0.08);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Audio error (playStaggerPop):", e);
+  }
 };
 
 export const playMechanicalClick = () => {
   try {
     const ctx = getAudioCtx();
+    if (!ctx || ctx.state !== "running") return;
+
     const t = ctx.currentTime;
     
     const osc = ctx.createOscillator();
@@ -93,14 +128,20 @@ export const playMechanicalClick = () => {
     osc.connect(gain);
     gain.connect(ctx.destination);
     
+    setupCleanup(osc, gain, ctx, 0.03);
+
     osc.start(t);
     osc.stop(t + 0.03);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Audio error (playMechanicalClick):", e);
+  }
 };
 
 export const playRelaxingOpening = () => {
   try {
     const ctx = getAudioCtx();
+    if (!ctx || ctx.state !== "running") return;
+
     const t = ctx.currentTime;
     const duration = 2.5;
 
@@ -130,6 +171,12 @@ export const playRelaxingOpening = () => {
     filter.connect(gain);
     gain.connect(ctx.destination);
 
+    source.onended = () => {
+      source.disconnect();
+      filter.disconnect();
+      gain.disconnect();
+    };
+
     // 2. Soft "Crystal" Chime
     const frequencies = [440, 554.37, 659.25];
     frequencies.forEach((freq, i) => {
@@ -144,30 +191,47 @@ export const playRelaxingOpening = () => {
 
       osc.connect(oscGain);
       oscGain.connect(ctx.destination);
+      
+      osc.onended = () => {
+        osc.disconnect();
+        oscGain.disconnect();
+      };
+
       osc.start(t + i * 0.1);
       osc.stop(t + i * 0.1 + 2.0);
     });
 
     source.start(t);
     source.stop(t + duration);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Audio error (playRelaxingOpening):", e);
+  }
 };
 
 export const playShimmerSound = () => {
   try {
     const ctx = getAudioCtx();
+    if (!ctx || ctx.state !== "running") return;
+
     const t = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "sine";
     osc.frequency.setValueAtTime(2000, t);
     osc.frequency.exponentialRampToValueAtTime(3000, t + 0.15);
+    
     gain.gain.setValueAtTime(0, t);
     gain.gain.linearRampToValueAtTime(0.02, t + 0.05);
     gain.gain.linearRampToValueAtTime(0, t + 0.15);
+    
     osc.connect(gain);
     gain.connect(ctx.destination);
+    
+    setupCleanup(osc, gain, ctx, 0.15);
+
     osc.start(t);
     osc.stop(t + 0.15);
-  } catch (e) {}
+  } catch (e) {
+    console.error("Audio error (playShimmerSound):", e);
+  }
 };

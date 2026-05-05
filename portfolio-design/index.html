@@ -576,7 +576,7 @@
           one page at a time from the home screen.
         </p>
         <div class="story-actions">
-          <a class="story-link" href="./design2.html">
+          <a class="story-link" href="#projects">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="3" y="4" width="18" height="14" rx="1"></rect>
               <path d="M7 20h10"></path>
@@ -584,8 +584,28 @@
               <path d="M9 12h3"></path>
             </svg>
             <span class="story-link-text">
-              <span class="story-link-label">Open Projects Page</span>
-              <span class="story-link-meta">Primary work and selected builds</span>
+              <span class="story-link-label">Open Projects</span>
+              <span class="story-link-meta">View my work and builds</span>
+            </span>
+          </a>
+          <a class="story-link" href="#hobby">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4m0-4h.01"></path>
+            </svg>
+            <span class="story-link-text">
+              <span class="story-link-label">Scroll to About</span>
+              <span class="story-link-meta">Learn more about me</span>
+            </span>
+          </a>
+          <a class="story-link" href="#final">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 1v6m0 6v6M1 12h6m6 0h6"></path>
+            </svg>
+            <span class="story-link-text">
+              <span class="story-link-label">View Skills</span>
+              <span class="story-link-meta">My technical expertise</span>
             </span>
           </a>
         </div>
@@ -620,10 +640,10 @@
     <section class="story-section" id="hobby">
       <article class="hero-card story-card">
         <p class="story-step">Page 2</p>
-        <h2 class="hero-title">Hobby</h2>
+        <h2 class="hero-title">About</h2>
         <p class="hero-text">
-          Nature photography adds a calmer, more personal side to the portfolio. It
-          brings in observation, mood, and visual storytelling outside of code.
+          I'm a passionate frontend developer who loves creating beautiful and functional web experiences. 
+          I focus on clean code, smooth interactions, and user-centered design.
         </p>
         <div class="story-actions">
           <a class="story-link" href="./hobby.html">
@@ -642,10 +662,10 @@
     <section class="story-section" id="final">
       <article class="hero-card story-card">
         <p class="story-step">Page 3</p>
-        <h2 class="hero-title">Design 5</h2>
+        <h2 class="hero-title">Skills</h2>
         <p class="hero-text">
-          The closing page now sits at the end of the portfolio journey. Scroll reaches
-          it last, then the dedicated page carries the final message.
+          Proficient in modern web technologies including HTML5, CSS3, JavaScript, React, and more. 
+          I specialize in creating responsive, accessible, and performant web applications.
         </p>
         <div class="story-actions">
           <a class="story-link" href="./design5.html">
@@ -653,6 +673,18 @@
               <path d="M5 12h14"></path>
               <path d="M13 6l6 6-6 6"></path>
             </svg>
+            <span class="story-link-text">
+              <span class="story-link-label">View Full Skills</span>
+              <span class="story-link-meta">Detailed technical expertise</span>
+            </span>
+          </a>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <input type="file" id="fileInput" accept="image/*" />
             <span class="story-link-text">
               <span class="story-link-label">Open Final Page</span>
               <span class="story-link-meta">Closing screen and last portfolio note</span>
@@ -865,6 +897,78 @@
 
       animate();
     }
+  </script>
+
+  <script>
+    // Smooth scroll for anchor links - Enhanced version
+    (function() {
+      console.log('Smooth scroll script loaded');
+      
+      // Add CSS smooth scrolling
+      const style = document.createElement('style');
+      style.textContent = 'html { scroll-behavior: smooth; }';
+      document.head.appendChild(style);
+      
+      // Wait for DOM to be ready
+      function initSmoothScroll() {
+        const links = document.querySelectorAll('a[href^="#"]');
+        console.log('Found anchor links:', links.length);
+        
+        links.forEach((link, index) => {
+          const href = link.getAttribute('href');
+          console.log(`Link ${index}: ${href}`);
+          
+          link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            console.log('Clicked link:', href);
+            
+            // Skip if it's just "#"
+            if (href === '#') {
+              return;
+            }
+            
+            // Handle #home separately
+            if (href === '#home') {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return;
+            }
+            
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            console.log('Target element:', targetElement);
+            
+            if (targetElement) {
+              e.preventDefault();
+              
+              // Get the target position
+              const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+              
+              console.log('Scrolling to position:', targetPosition);
+              
+              // Smooth scroll to target
+              window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+              });
+            } else {
+              console.error('Target element not found:', targetId);
+            }
+          });
+        });
+      }
+      
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSmoothScroll);
+      } else {
+        initSmoothScroll();
+      }
+      
+      // Also re-initialize after a delay to catch dynamically added elements
+      setTimeout(initSmoothScroll, 1000);
+    })();
   </script>
 </body>
 </html>

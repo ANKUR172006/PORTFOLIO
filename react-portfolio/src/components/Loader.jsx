@@ -114,7 +114,7 @@ export default function Loader({ onComplete }) {
     >
       {!hasInteracted && (
         <div className="loader-interaction-hint">
-          <span>INTERACT TO INITIALIZE AUDIO</span>
+          <span>click here to start</span>
         </div>
       )}
       <div className="scroll-spacer"></div>
