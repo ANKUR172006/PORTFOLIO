@@ -546,7 +546,7 @@ function HomePage(props) {
 
     try {
       // Use the direct email endpoint (no /f/ prefix for email-based routing)
-      const endpoint = "https://formspree.io/2414063ankur.2024cse@gmail.com";
+      const endpoint = "https://formspree.io/f/xvzlbkyy";
       
       const response = await fetch(endpoint, {
         method: "POST",
