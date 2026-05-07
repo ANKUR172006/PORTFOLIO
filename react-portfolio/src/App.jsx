@@ -2018,8 +2018,16 @@ function BongoCat() {
 
 function ThreeBackground() {
   const mountRef = useRef(null);
+  const [isMobileState, setIsMobileState] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
+    const handleResizeState = () => setIsMobileState(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResizeState);
+    return () => window.removeEventListener("resize", handleResizeState);
+  }, []);
+
+  useEffect(() => {
+    if (isMobileState) return;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -2180,21 +2188,33 @@ function ThreeBackground() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
-      if (mountRef.current) {
+      if (mountRef.current && renderer.domElement && mountRef.current.contains(renderer.domElement)) {
         mountRef.current.removeChild(renderer.domElement);
       }
       geometry.dispose();
       material.dispose();
     };
-  }, []);
+  }, [isMobileState]);
+
+  if (isMobileState) {
+    return <div className="three-bg-canvas mobile-fallback" style={{ background: "radial-gradient(circle at center, #1a0000 0%, #000 100%)" }} />;
+  }
 
   return <div ref={mountRef} className="three-bg-canvas" />;
 }
 
 function LiquidGlassBackground({ textLine1 = "GET IN", textLine2 = "TOUCH" }) {
   const mountRef = useRef(null);
+  const [isMobileState, setIsMobileState] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
+    const handleResizeState = () => setIsMobileState(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResizeState);
+    return () => window.removeEventListener("resize", handleResizeState);
+  }, []);
+
+  useEffect(() => {
+    if (isMobileState) return;
     if (!mountRef.current) return;
 
     let isMobile = window.innerWidth <= 768;
@@ -2639,12 +2659,33 @@ function LiquidGlassBackground({ textLine1 = "GET IN", textLine2 = "TOUCH" }) {
       container.removeEventListener("pointerdown", onPointerDown);
       container.removeEventListener("pointerup", onPointerUp);
       container.removeEventListener("pointerleave", onPointerLeave);
-      if (mountRef.current) mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current && renderer.domElement && mountRef.current.contains(renderer.domElement)) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
       bgTexture.dispose();
       dropletTex.dispose();
       mat.dispose();
     };
-  }, []);
+  }, [isMobileState, textLine1, textLine2]);
+
+  if (isMobileState) {
+    return (
+      <div className="liquid-glass-bg-mobile" style={{
+        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        background: 'linear-gradient(180deg, #050505 0%, #080505 35%, #0a0505 60%, #050505 100%)',
+        zIndex: 0, pointerEvents: 'none'
+      }}>
+        <div style={{
+          fontSize: '12vw', fontWeight: 700, fontFamily: '"Space Grotesk", sans-serif',
+          color: '#000', opacity: 0.15, textAlign: 'center', lineHeight: 1.1
+        }}>
+          <div>{textLine1}</div>
+          <div>{textLine2}</div>
+        </div>
+      </div>
+    );
+  }
 
   return <div ref={mountRef} className="liquid-glass-bg" />;
 }
