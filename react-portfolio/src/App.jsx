@@ -1814,7 +1814,7 @@ function HomePage(props) {
                 <div className="card-corner br"></div>
                 <span className="brutalist-card-badge">DIRECT LINE</span>
                 <h3>CONTACT INFO</h3>
-                <p><strong>EMAIL:</strong> <a href="mailto:ankurbishyer@gmail.com" style={{color: 'inherit', textDecoration: 'underline'}}>ankurbishyer@gmail.com</a></p>
+                <p><strong>EMAIL:</strong> <a href="mailto:2414063ankur.2024cse@gmail.com" style={{color: 'inherit', textDecoration: 'underline'}}>2414063ankur.2024cse@gmail.com</a></p>
                 <p><strong>BASE:</strong> Rohtak, India</p>
                 <p><strong>STATUS:</strong> Open for projects</p>
               </article>
