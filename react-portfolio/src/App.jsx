@@ -1828,7 +1828,7 @@ function HomePage(props) {
                 <h3>SOCIAL LINKS</h3>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '0.8rem'}}>
                   <a href="https://github.com/ankurbishyer" target="_blank" rel="noreferrer" style={{color: 'inherit', fontWeight: '700'}}>GITHUB ↗</a>
-                  <a href="https://linkedin.com/in/ankurbishyer" target="_blank" rel="noreferrer" style={{color: 'inherit', fontWeight: '700'}}>LINKEDIN ↗</a>
+                  <a href="https://www.linkedin.com/in/ankur-bishyer-354447371/" target="_blank" rel="noreferrer" style={{color: 'inherit', fontWeight: '700'}}>LINKEDIN ↗</a>
                   <a href="https://instagram.com/ankur_172007" target="_blank" rel="noreferrer" style={{color: 'inherit', fontWeight: '700'}}>INSTAGRAM ↗</a>
                 </div>
               </article>
