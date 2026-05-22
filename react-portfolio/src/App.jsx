@@ -1815,6 +1815,7 @@ function HomePage(props) {
                 <span className="brutalist-card-badge">DIRECT LINE</span>
                 <h3>CONTACT INFO</h3>
                 <p><strong>EMAIL:</strong> <a href="mailto:2414063ankur.2024cse@gmail.com" style={{color: 'inherit', textDecoration: 'underline'}}>2414063ankur.2024cse@gmail.com</a></p>
+                <p><strong>PHONE:</strong> <a href="tel:+918818068869" style={{color: 'inherit', textDecoration: 'underline'}}>+91 8818068869</a></p>
                 <p><strong>BASE:</strong> Rohtak, India</p>
                 <p><strong>STATUS:</strong> Open for projects</p>
               </article>
