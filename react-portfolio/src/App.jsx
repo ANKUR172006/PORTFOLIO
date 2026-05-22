@@ -1478,6 +1478,12 @@ function HomePage(props) {
               <p style={{marginTop: '2rem', fontSize: '0.85rem', opacity: 0.8}}>
                 "Building a future where computers heal themselves through natural conversation, even without an internet connection."
               </p>
+              <p style={{marginTop: '2rem', fontSize: '0.85rem', opacity: 0.8}}>
+                "Currently just an idea but imagine laptop fixes its glitches and other problems just by itself our work is only to insert an pendrive then an ai bot appears like doctor of your laptop and fixes it.  "
+              </p>
+              <p style={{marginTop: '2rem', fontSize: '0.85rem', opacity: 0.8}}>
+               "In simple words is like local doctor of laptop who cannot do surgeries, cannot cure big disease but still can cure you "
+              </p>
             </div>
 
             <div className="startup-form-container">
@@ -2690,6 +2696,71 @@ function LiquidGlassBackground({ textLine1 = "GET IN", textLine2 = "TOUCH" }) {
   return <div ref={mountRef} className="liquid-glass-bg" />;
 }
 
+function LazyVideo({ src, className, ...props }) {
+  const videoRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsLoaded(true);
+        } else if (videoRef.current) {
+          videoRef.current.pause();
+        }
+      },
+      {
+        rootMargin: "200px",
+        threshold: 0.01,
+      }
+    );
+
+    if (videoRef.current) {
+      observer.observe(videoRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded || !videoRef.current) return;
+
+    const playVideo = () => {
+      videoRef.current.play().catch(() => {});
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          playVideo();
+        } else {
+          videoRef.current.pause();
+        }
+      },
+      {
+        threshold: 0.01,
+      }
+    );
+
+    observer.observe(videoRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [isLoaded]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={isLoaded ? src : undefined}
+      preload="none"
+      className={className}
+      {...props}
+    />
+  );
+}
+
 function ProjectsPage() {
   const scrollContainerRef = useRef(null);
   const hudPctRef = useRef(null);
@@ -2916,7 +2987,7 @@ function ProjectsPage() {
               </div>
             </div>
             <div className={`project-media-wrap ${idx % 2 !== 0 ? 'left' : 'right'}`}>
-              <video src={proj.video} muted loop playsInline autoPlay />
+              <LazyVideo src={proj.video} muted loop playsInline />
             </div>
           </section>
         ))}

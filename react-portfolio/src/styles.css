@@ -223,9 +223,8 @@ img {
   position: fixed;
   inset: 0;
   z-index: 120;
-  display: grid;
-  place-items: center;
-  padding: 24px;
+  display: block;
+  padding: 0;
   background:
     radial-gradient(circle at 50% 30%, rgba(192, 39, 31, 0.18), transparent 32%),
     linear-gradient(180deg, rgba(10, 10, 11, 0.96), rgba(10, 10, 11, 0.99));

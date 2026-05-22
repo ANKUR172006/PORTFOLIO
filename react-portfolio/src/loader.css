@@ -40,6 +40,15 @@
 	width: 100%;
 }
 
+@media (max-width: 768px) {
+	.word-scroll {
+		--font-level: 3;
+	}
+	.word-scroll-inner {
+		padding: 0 16px;
+	}
+}
+
 .word-scroll-inner {
 	display: flex;
 	justify-content: center;
@@ -48,7 +57,7 @@
 
 .word-scroll-inner h2 {
 	position: sticky;
-	top: calc(50vh - 0.5lh);
+	top: calc(50dvh - 0.5lh);
 	margin: 0;
 	font-size: inherit;
 	font-weight: 500;
@@ -59,13 +68,13 @@
 	font-weight: 500;
 	list-style: none;
 	margin: 0;
-	padding-block: calc(50vh - 0.5lh);
+	padding-block: calc(50dvh - 0.5lh);
 	padding-left: 0;
 	--step: calc((var(--end) - var(--start)) / (var(--count) - 1));
 }
 
 .word-scroll[data-snap="true"] {
-	height: 100vh;
+	height: 100dvh;
 	overflow-y: auto;
 	scroll-snap-type: y proximity;
 }
