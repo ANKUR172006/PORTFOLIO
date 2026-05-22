@@ -1339,7 +1339,6 @@ function HomePage(props) {
             // Haunted flicker for terminal and notes
             gsap.to(["#bongo-cat .terminal-code", "#bongo-cat .music .note"], {
               opacity: "random(0.3, 1)",
-              filter: "blur(random(0, 2)px)",
               duration: 0.2,
               repeat: -1,
               repeatRefresh: true,
@@ -2637,8 +2636,10 @@ function LiquidGlassBackground({ textLine1 = "GET IN", textLine2 = "TOUCH" }) {
     let last = performance.now();
     let acc = 0;
     let frameId;
+    let isIntersecting = false;
 
     const loop = () => {
+      if (!isIntersecting) return;
       const now = performance.now();
       const dt = Math.min(now - last, MAX_FRAME_DT_MS);
       last = now;
@@ -2657,10 +2658,26 @@ function LiquidGlassBackground({ textLine1 = "GET IN", textLine2 = "TOUCH" }) {
       renderer.render(scene, camera);
       frameId = requestAnimationFrame(loop);
     };
-    loop();
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        if (isIntersecting) {
+          last = performance.now();
+          loop();
+        } else {
+          cancelAnimationFrame(frameId);
+        }
+      },
+      {
+        threshold: 0.01,
+      }
+    );
+    observer.observe(container);
 
     return () => {
       cancelAnimationFrame(frameId);
+      observer.disconnect();
       window.removeEventListener("resize", handleResize);
       container.removeEventListener("pointermove", onPointerMove);
       container.removeEventListener("pointerdown", onPointerDown);
